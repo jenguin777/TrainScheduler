@@ -20,16 +20,86 @@
 
 </head>
 <body>
+    <!-- Main Bootstrap Area -->
+    <div class="container">
 
+        <!-- Jumbotron for Title -->
+        <div class="jumbotron" style="background-color: #20315A ; color: white;">
+            <h1 class="text-center">
+                <strong>
+                    <i class="fa fa-newspaper-o"></i> Train Scheduler</strong>
+            </h1>
+        </div>
 
+        <!-- Row for displaying Train Schedule table -->
+        <div class="row">
+            <div class="col-sm-12">
+                <br>
+                    <!-- This panel will initially be made up of a panel and wells for each of the articles retrieved -->
+                    <div class="card">
 
+                        <!-- Panel Heading for the retrieved articles box -->
+                        <div class="card-header">
+                            <strong><i class="fa fa-table"></i> Train Schedule</strong>
+                        </div>
 
+                        <!-- This main panel will hold each of the resulting articles -->
+                        <div class="card-body" id="schedule-section">
+                        </div>
+                    </div>
+            </div>
+        </div>
 
-
-
-
-
-
+        <!-- Row for Adding Train form -->
+        <div class="row">
+            <div class="col-sm-12">
+                <br>
+                <!-- First panel is for handling the search parameters -->
+                <div class="card">
+                    <div class="card-header">
+                        <strong><i class="fa fa-list-alt"></i> Add Train</strong>
+                    </div>
+                    <div class="card-body">
+    
+                        <!-- Here we create an HTML Form for handling the inputs-->
+                        <form role="form">
+    
+                            <!-- Here we create the text box for capturing the train name-->
+                            <div class="form-group">
+                                <label for="search">Train Name</label>
+                                <input type="text" class="form-control" id="train-name">
+                            </div>
+    
+                            <!-- Here we create the text box for capturing the destination-->
+                            <div class="form-group">
+                                <label for="search">Destination</label>
+                                <input type="text" class="form-control" id="destination">
+                            </div>
+    
+                            <!-- Here we capture the First Train Time-->
+                            <div class="form-group">
+                                <label for="first-arrival">First Train Time (HH:mm military time)</label>
+                                <input type="text" class="form-control" id="first-train-time">
+                            </div>
+    
+                            <!-- Here we capture the Frequency -->
+                            <div class="form-group">
+                                <label for="frequency">Frequency</label>
+                                <input type="text" class="form-control" id="train-frequency">
+                            </div>
+    
+                            <!-- Here we have our final submit button -->
+                            <button type="submit" class="btn btn-default" id="add-train">
+                                <i class="fa fa-search"></i> Submit</button>
+                            <button class="btn btn-default" id="clear-all">
+                                <i class="fa fa-trash"></i> Clear Results</button>
+    
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
      <!--Link to jQuery-->
      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>

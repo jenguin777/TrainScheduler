@@ -1,13 +1,10 @@
-
 // Initialize Firebase
 var config = {
     apiKey: "AIzaSyALppos2MnyJCWdKNQ8-CnaMMNKTry7eMg",
     authDomain: "train-scheduler-84b57.firebaseapp.com",
     databaseURL: "https://train-scheduler-84b57.firebaseio.com",
     projectId: "train-scheduler-84b57",
-    //storageBucket: "train-scheduler-84b57.appspot.com",
     storageBucket: "",
-    //messagingSenderId: "11579043529"
   };
   
 // This is passing in our firebase config information  
@@ -26,7 +23,7 @@ var trainName = "";
 var destination = "";
 // Should this be data type string???
 var firstTrainTime = "";
-// frequency train runs in minutes
+// frequency train runs, in minutes
 var frequency = 0;
 
 // Handling the add train Submit button clicks
@@ -39,15 +36,17 @@ $("#add-train").on("click", function(event) {
   firstTrainTime = $("#first-train-time-input").val().trim();
   frequency = $("#frequency-input").val().trim();
   
-  // Store the data entered
+  // Store the data entered into the firebase database
   trainData.push({
       nameData: trainName,
       destinationData: destination,
       firstTrainTimeData:firstTrainTime,
-      frequencyData: frequency
+      frequencyData: frequency,
+      dateAdded: firebase.database.ServerValue.TIMESTAMP
       });
   });
 
+  // Fetch the train data from the firebase database and write it to the #schedule-section
   function appendTrain(trainData) {
 
     var tr = $("<tr>");
@@ -70,7 +69,9 @@ $("#add-train").on("click", function(event) {
 
   }
 
-// Add child
+appendTrain();
+
+// Firebase watcher + initial loader for the subsequent submits
 trainData.on("child_added", function(childsnapshot) {
   console.log(childsnapshot.val());
 
@@ -80,12 +81,12 @@ trainData.on("child_added", function(childsnapshot) {
   console.log(childsnapshot.val().firstTrainTimeData);
   console.log(childsnapshot.val().frequencyData);
 
-  appendTrain(childsnapshot);
+  // Call appendTrain() to write results to the #schedule-section
+  appendTrain();
 
 }, function(errorObject) {
       console.log("The read failed: " + errorObject.code);
     });
-
 
 // // --------------------------------------------------------------
 // // MAIN PROCESS and INITIAL CODE AT STARTUP

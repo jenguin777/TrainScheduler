@@ -39,7 +39,7 @@ var frequency = 0;
 // FUNCTIONS
 // --------------------------------------------------------------------------------
 
-// Fetch the train data from the firebase database and write it to the #schedule-section
+// Function to fetch the train data from the firebase database and write it to the #schedule-section
 function appendTrain(train) {
 
   console.log("train " + JSON.stringify(train));
@@ -58,8 +58,32 @@ function appendTrain(train) {
   tr.append(tdName).append(tdDestination).append(tdFrequency);
 
   $("#schedule-section").append(tr);
+
+  // Call function nextArrival() to calculate train's nextArrival
+  //nextArrival();
+
+  // Call function minutesAway() to calculate minutes until the next train arrives
   
 }
+
+// Function to display current time
+function currentTime() {
+  var now = moment().format("HH:mm");
+  console.log("now" + now);
+  $("#current-time").text("Current Time: " + now);
+}
+
+// Function to calculate the train's next arrival time, then append it to each train row
+function nextArrival() {
+  var now = moment().format("HH:mm");
+  console.log("now" + now);
+  
+}
+
+// Calculate how many minutes from now until the next train arrives, then appent it to each train row
+// function minutesAway() {
+
+// }
 
 // BODY
 // --------------------------------------------------------------------------------
@@ -74,7 +98,10 @@ trainData.on("child_added", function(childsnapshot) {
   console.log(childsnapshot.val().firstTrainTimeData);
   console.log(childsnapshot.val().frequencyData);
 
-  // Call appendTrain() to write results to the #schedule-section
+  // Call currentTime() to display the current time in #current-time
+  currentTime();
+
+  // Call appendTrain() to write results to #schedule-section
   appendTrain(childsnapshot);
 
 }, function(errorObject) {

@@ -21,6 +21,9 @@
     <!-- Linking my own CSS last for overrides-->
     <link rel="stylesheet" type="text/css" href="assets/css/style.css">
 
+    <!-- Link to Moment.js should go here -->
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/moment.min.js"></script>
+
 </head>
 <body>
     <!-- Main Bootstrap Area -->
@@ -32,6 +35,17 @@
                 <strong>
                     <i class="fa fa-newspaper-o"></i> Train Scheduler</strong>
             </h1>
+        </div>
+
+        <!-- Row for Current Time -->
+        <div class="row">
+            <div class="col-sm-12">
+                <h1 class="text-center">
+                    <strong>
+                        <i id=current-time></i> 
+                    </strong>
+                </h1>
+            </div>
         </div>
 
         <!-- Row for displaying Train Schedule table -->

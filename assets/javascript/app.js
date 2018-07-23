@@ -10,8 +10,8 @@ var config = {
 // This is passing in our firebase config information  
 firebase.initializeApp(config);
 
-// Adding this because trainData is stored as list of lists, i.e., array
-var allTrains = [];
+// Adding this because train is stored as list of lists, i.e., array
+var train = "";
 
 // VARIABLES
 // --------------------------------------------------------------------------------
@@ -50,22 +50,22 @@ $("#add-train").on("click", function(event) {
   });
 
   // Fetch the train data from the firebase database and write it to the #schedule-section
-  function appendTrain(trainData) {
-    
-    for (var i = 0; i < trainData.length; i++) {
-
+  function appendTrain(train) {
+    // for (var i = 0; i < trainData.length; i++) {
+      //Object.keys(trainData).length
+    for (var i = 0; i < Object.keys(train).length; i++) {
     var tr = $("<tr>");
 
     var tdName = $("<td>");
-    tdName.text(trainData.nameData);
+    tdName.text(train.nameData);
     console.log("tdName " + JSON.stringify(tdName));
 
     var tdDestination = $("<td>");
-    tdDestination.text(trainData.destinationData);
+    tdDestination.text(train.destinationData);
     console.log("tdDestination " + JSON.stringify(tdDestination));
 
     var tdFrequency = $("<td>");
-    tdFrequency.text(trainData.frequencyData);
+    tdFrequency.text(train.frequencyData);
     console.log("tdFrequency " + JSON.stringify(tdFrequency));
     
     tr.append(tdName).append(tdDestination).append(tdFrequency);
@@ -75,6 +75,7 @@ $("#add-train").on("click", function(event) {
 
   }
 
+console.log("tdName " + JSON.stringify(train));
 appendTrain();
 
 // Firebase watcher + initial loader for the subsequent submits

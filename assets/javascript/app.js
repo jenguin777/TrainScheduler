@@ -10,6 +10,9 @@ var config = {
 // This is passing in our firebase config information  
 firebase.initializeApp(config);
 
+// Adding this because trainData is stored as list of lists, i.e., array
+var allTrains = [];
+
 // VARIABLES
 // --------------------------------------------------------------------------------
 // put your firebase database into a variable called trainData
@@ -48,6 +51,8 @@ $("#add-train").on("click", function(event) {
 
   // Fetch the train data from the firebase database and write it to the #schedule-section
   function appendTrain(trainData) {
+    
+    for (var i = 0; i < trainData.length; i++) {
 
     var tr = $("<tr>");
 
@@ -66,6 +71,7 @@ $("#add-train").on("click", function(event) {
     tr.append(tdName).append(tdDestination).append(tdFrequency);
 
     $("#schedule-section").append(tr);
+    }
 
   }
 

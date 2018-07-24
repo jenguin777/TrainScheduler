@@ -1,170 +1,179 @@
-// Initialize Firebase
-var config = {
-  apiKey: "AIzaSyALppos2MnyJCWdKNQ8-CnaMMNKTry7eMg",
-  authDomain: "train-scheduler-84b57.firebaseapp.com",
-  databaseURL: "https://train-scheduler-84b57.firebaseio.com",
-  projectId: "train-scheduler-84b57",
-  storageBucket: "",
-};
+$(document).ready(function () {
 
-// This is passing in our firebase config information  
-firebase.initializeApp(config);
+    // Initialize Firebase
+    var config = {
 
-// VARIABLES
-// --------------------------------------------------------------------------------
-// ***Firebase variables***
+        apiKey: "AIzaSyALppos2MnyJCWdKNQ8-CnaMMNKTry7eMg",
+        authDomain: "train-scheduler-84b57.firebaseapp.com",
+        databaseURL: "https://train-scheduler-84b57.firebaseio.com",
+        projectId: "train-scheduler-84b57",
+        storageBucket: "",
 
-// put firebase database into a variable called db
-var db = firebase.database();
+    };
 
-// create TrainScheduler folder in firebase database, then store in a variable called trainData
-var trainData = db.ref("/TrainScheduler");
+    // This is passing in our firebase config information  
+    firebase.initializeApp(config);
 
-// ***Program variables***
+    // VARIABLES
+    // --------------------------------------------------------------------------------
+    // ***Firebase variables***
 
-// trainScheduler contains a list of trains, each train having a list of attributes
-// train is the variable for one train
-var train = "";
+    // put firebase database into a variable called db
+    var db = firebase.database();
 
-// now for the train attribute variables
-// Name of train
-var trainName = "";
-// Destination
-var destination = "";
-// Should this be data type string???
-var firstTrainTime = "";
-// frequency train runs, in minutes
-var frequency = 0;
+    // create TrainScheduler folder in firebase database, then store in a variable called trainData
+    var trainData = db.ref("/TrainScheduler");
 
-// FUNCTIONS
-// --------------------------------------------------------------------------------
+    // ***Program variables***
 
-// Function to fetch the train data from the firebase database and write it to the #schedule-section
-function appendTrain(train) {
+    // trainScheduler contains a list of trains, each train having a list of attributes
+    // train is the variable for one train
+    var train = "";
 
-console.log("train " + JSON.stringify(train));
+    // now for the train attribute variables
+    // Name of train
+    var trainName = "";
+    // Destination
+    var destination = "";
+    // Should this be data type string???
+    var firstTrainTime = "";
+    // frequency train runs, in minutes
+    var frequency = 0;
 
-var tr = $("<tr>");
+    // FUNCTIONS
+    // --------------------------------------------------------------------------------
 
-var tdName = $("<td>");
-tdName.text(train.val().nameData);
+    // Function to fetch the train data from the firebase database and write it to the #schedule-section
+    function appendTrain(train) {
 
-var tdDestination = $("<td>");
-tdDestination.text(train.val().destinationData);
+        console.log("train " + JSON.stringify(train));
 
-var tdFrequency = $("<td>");
-tdFrequency.text(train.val().frequencyData);
+        var tr = $("<tr>");
 
-var tdNextArrivalInfo = nextArrival(train);
-var tdNextArrivalInfoTime = tdNextArrivalInfo[0];
-var tdNextArrivalTime = $("<td>");
-tdNextArrivalTime.text(tdNextArrivalInfoTime);
+        var tdName = $("<td>");
+        tdName.text(train.val().nameData);
 
-var tdMinutesTillTrainInfo = nextArrival(train);
-var tdMinutesTillTrainInfoMinutes = tdMinutesTillTrainInfo[1];
-var tdMinutesTillTrain = $("<td>");
-tdMinutesTillTrain.text(tdMinutesTillTrainInfoMinutes);
-console.log("&&&&&&------appendTrain - tdMinutesTillTrain: " + tdMinutesTillTrain); 
+        var tdDestination = $("<td>");
+        tdDestination.text(train.val().destinationData);
 
-tr.append(tdName).append(tdDestination).append(tdFrequency).append(tdNextArrivalTime).append(tdMinutesTillTrain);
+        var tdFrequency = $("<td>");
+        tdFrequency.text(train.val().frequencyData);
 
-$("#schedule-section").append(tr);
+        var tdNextArrivalInfo = nextArrival(train);
+        var tdNextArrivalInfoTime = tdNextArrivalInfo[0];
+        var tdNextArrivalTime = $("<td>");
+        tdNextArrivalTime.text(tdNextArrivalInfoTime);
 
-}
+        var tdMinutesTillTrainInfo = nextArrival(train);
+        var tdMinutesTillTrainInfoMinutes = tdMinutesTillTrainInfo[1];
+        var tdMinutesTillTrain = $("<td>");
+        tdMinutesTillTrain.text(tdMinutesTillTrainInfoMinutes);
+        console.log("&&&&&&------appendTrain - tdMinutesTillTrain: " + tdMinutesTillTrain); 
 
-// Function to display current time
-function currentTime() {
-var now = moment().format("HH:mm");
-console.log("now" + now);
-$("#current-time").text("Current Time: " + now);
-}
+        tr.append(tdName).append(tdDestination).append(tdFrequency).append(tdNextArrivalTime).append(tdMinutesTillTrain);
 
-// Function to calculate the train's next arrival time
-function nextArrival(nextTrain) {
+        $("#schedule-section").append(tr);
 
-// Assumptions
-var tFrequency = nextTrain.val().frequencyData;
-console.log("*********tFrequency: " + tFrequency);
+    }
 
-var tFirstTime = nextTrain.val().firstTrainTimeData;
-console.log("*********firstTrainTimeData: " + tFirstTime);
+    // Function to display current time
+    function currentTime() {
 
-var tMyTrain = nextTrain.val().nameData;
-console.log("*********tMyTrain: " + tMyTrain);
+        var now = moment().format("HH:mm");
+        console.log("now" + now);
+        $("#current-time").text("Current Time: " + now);
+    }
 
-// firstTrainTime (pushed back 1 year to make sure it comes before current time)
-var firstTrainTimeConverted = moment(nextTrain.val().firstTrainTimeData, "hh:mm").subtract(1, "years");
-console.log("firstTrainTimeCoverted: " + firstTrainTimeConverted);
+    // Function to calculate the train's next arrival time
+    function nextArrival(nextTrain) {
 
-// Difference between the times
-var diffTime = moment().diff(moment(firstTrainTimeConverted), "minutes");
-console.log("diffTime: " + diffTime);
+        // Assumptions
+        var tFrequency = nextTrain.val().frequencyData;
+        console.log("*********tFrequency: " + tFrequency);
 
-// Time apart (remainder)
-var tRemainder = diffTime % tFrequency;
-console.log(tRemainder);
+        var tFirstTime = nextTrain.val().firstTrainTimeData;
+        console.log("*********firstTrainTimeData: " + tFirstTime);
 
-// Minute Until Train
-var tMinutesTillTrain = tFrequency - tRemainder;
-console.log("tMinutesTillTrain: " + tMinutesTillTrain);
+        var tMyTrain = nextTrain.val().nameData;
+        console.log("*********tMyTrain: " + tMyTrain);
 
-// Next Train
-var nextTrainTime = moment().add(tMinutesTillTrain, "minutes");
-console.log("nextTrainTime: " + moment(nextTrainTime).format("hh:mm"));
+        // firstTrainTime (pushed back 1 year to make sure it comes before current time)
+        var firstTrainTimeConverted = moment(nextTrain.val().firstTrainTimeData, "hh:mm").subtract(1, "years");
+        console.log("firstTrainTimeCoverted: " + firstTrainTimeConverted);
 
-console.log("+++++++++++------nextArrival - tMinutesTillTrain: " + tMinutesTillTrain);
+        // Difference between the times
+        var diffTime = moment().diff(moment(firstTrainTimeConverted), "minutes");
+        console.log("diffTime: " + diffTime);
 
-return [moment(nextTrainTime).format("hh:mm"), moment(tMinutesTillTrain).format("hh:mm")];
+        // Time apart (remainder)
+        var tRemainder = diffTime % tFrequency;
+        console.log(tRemainder);
 
-}
+        // Minute Until Train
+        var tMinutesTillTrain = tFrequency - tRemainder;
+        console.log("tMinutesTillTrain: " + tMinutesTillTrain);
 
-// BODY
-// --------------------------------------------------------------------------------
+        // Next Train
+        var nextTrainTime = moment().add(tMinutesTillTrain, "minutes");
+        console.log("nextTrainTime: " + moment(nextTrainTime).format("hh:mm"));
 
-// Firebase watcher + initial loader for the subsequent submits
-trainData.on("child_added", function(childsnapshot) {
-console.log(childsnapshot.val());
+        console.log("+++++++++++------nextArrival - tMinutesTillTrain: " + tMinutesTillTrain);
 
-// Log everything that's coming out of childsnapshot
-console.log(childsnapshot.val().nameData);
-console.log(childsnapshot.val().destinationData);
-console.log(childsnapshot.val().firstTrainTimeData);
-console.log(childsnapshot.val().frequencyData);
+        return [moment(nextTrainTime).format("hh:mm"), moment(tMinutesTillTrain).format("hh:mm")];
 
-// Call currentTime() to display the current time in #current-time
-currentTime();
+    }
 
-// Call appendTrain() to write results to #schedule-section
-appendTrain(childsnapshot);
-// Call function nextArrival(train) to calculate train's nextArrival
-nextArrival(childsnapshot);
+    // BODY
+    // --------------------------------------------------------------------------------
 
-// need childsnapshot in other functions
-return childsnapshot;
+    // Firebase watcher + initial loader for the subsequent submits
+    trainData.on("child_added", function(childsnapshot) {
 
-}, function(errorObject) {
-    console.log("The read failed: " + errorObject.code);
-  });
+        console.log(childsnapshot.val());
 
-// Handling the add-train Submit button clicks
-$("#add-train").on("click", function(event) {
-event.preventDefault();
-    
-// Read the data from the form fields
-trainName = $("#train-name-input").val().trim();
-destination = $("#destination-input").val().trim();
-firstTrainTime = $("#first-train-time-input").val().trim();
-frequency = $("#frequency-input").val().trim();
+        // Log everything that's coming out of childsnapshot
+        console.log(childsnapshot.val().nameData);
+        console.log(childsnapshot.val().destinationData);
+        console.log(childsnapshot.val().firstTrainTimeData);
+        console.log(childsnapshot.val().frequencyData);
 
-// Store the data entered into the firebase database
-trainData.push({
-    nameData: trainName,
-    destinationData: destination,
-    firstTrainTimeData:firstTrainTime,
-    frequencyData: frequency,
-    dateAdded: firebase.database.ServerValue.TIMESTAMP
+        // Call currentTime() to display the current time in #current-time
+        currentTime();
+
+        // Call appendTrain() to write results to #schedule-section
+        appendTrain(childsnapshot);
+        // Call function nextArrival(train) to calculate train's nextArrival
+        nextArrival(childsnapshot);
+
+        // need childsnapshot in other functions
+        return childsnapshot;
+
+    }, function(errorObject) {
+
+          console.log("The read failed: " + errorObject.code);
+
+      });
+
+    // Handling the add-train Submit button clicks
+    $("#add-train").on("click", function(event) {
+
+        event.preventDefault();
+            
+        // Read the data from the form fields
+        trainName = $("#train-name-input").val().trim();
+        destination = $("#destination-input").val().trim();
+        firstTrainTime = $("#first-train-time-input").val().trim();
+        frequency = $("#frequency-input").val().trim();
+
+        // Store the data entered into the firebase database
+        trainData.push({
+            nameData: trainName,
+            destinationData: destination,
+            firstTrainTimeData:firstTrainTime,
+            frequencyData: frequency,
+            dateAdded: firebase.database.ServerValue.TIMESTAMP
+            });
+
     });
-
+    // --------------------------------------------------------------
 });
-
-// --------------------------------------------------------------

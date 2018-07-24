@@ -50,12 +50,15 @@ $(document).ready(function () {
 
         var tr = $("<tr>");
 
+        // Train Name
         var tdName = $("<td>");
         tdName.text(train.val().nameData);
 
+        // Destination
         var tdDestination = $("<td>");
         tdDestination.text(train.val().destinationData);
 
+        // Frequency
         var tdFrequency = $("<td>");
         tdFrequency.text(train.val().frequencyData);
 
@@ -74,8 +77,10 @@ $(document).ready(function () {
         tdMinutesTillTrain.text(tdMinutesTillTrainInfoMinutes);
         console.log("&&&&&&------appendTrain3 - tdMinutesTillTrain after text(): " + tdMinutesTillTrain); 
 
+        // Append everything to the tr element
         tr.append(tdName).append(tdDestination).append(tdFrequency).append(tdNextArrivalTime).append(tdMinutesTillTrain);
 
+        // Now write tr element to the #schedule-section
         $("#schedule-section").append(tr);
 
     }

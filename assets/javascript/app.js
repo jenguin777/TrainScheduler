@@ -54,16 +54,15 @@ function appendTrain(train) {
 
   var tdFrequency = $("<td>");
   tdFrequency.text(train.val().frequencyData);
+
+  var tdNextArrivalTime = $("<td>");
+  tdNextArrivalTime = nextArrival(train);
+  console.log("&&&&&&------appendTrain - tdNextArrivalTime: " + tdNextArrivalTime); 
   
-  tr.append(tdName).append(tdDestination).append(tdFrequency);
+  tr.append(tdName).append(tdDestination).append(tdFrequency).append(tdNextArrivalTime);
 
   $("#schedule-section").append(tr);
 
-  // Call function nextArrival() to calculate train's nextArrival
-  //nextArrival();
-
-  // Call function minutesAway() to calculate minutes until the next train arrives
-  
 }
 
 // Function to display current time
@@ -73,11 +72,41 @@ function currentTime() {
   $("#current-time").text("Current Time: " + now);
 }
 
-// Function to calculate the train's next arrival time, then append it to each train row
-function nextArrival() {
-  var now = moment().format("HH:mm");
-  console.log("now" + now);
+// Function to calculate the train's next arrival time
+function nextArrival(nextTrain) {
+
+  // Assumptions
+  var tFrequency = nextTrain.val().frequencyData;
+  console.log("*********tFrequency: " + tFrequency);
+
+  var tFirstTime = nextTrain.val().firstTrainTimeData;
+  console.log("*********firstTrainTimeData: " + tFirstTime);
+
+  var tMyTrain = nextTrain.val().nameData;
+  console.log("*********tMyTrain: " + tMyTrain);
+
+  // firstTrainTime (pushed back 1 year to make sure it comes before current time)
+  var firstTrainTimeConverted = moment(nextTrain.val().firstTrainTimeData, "hh:mm").subtract(1, "years");
+  console.log("firstTrainTimeCoverted: " + firstTrainTimeConverted);
+
+  // Difference between the times
+  var diffTime = moment().diff(moment(firstTrainTimeConverted), "minutes");
+  console.log("diffTime: " + diffTime);
+
+  // Time apart (remainder)
+  var tRemainder = diffTime % tFrequency;
+  console.log(tRemainder);
+
+  // Minute Until Train
+  var tMinutesTillTrain = tFrequency - tRemainder;
+  console.log("tMinutesTillTrain: " + tMinutesTillTrain);
+
+  // Next Train
+  var nextTrainTime = moment().add(tMinutesTillTrain, "minutes");
+  console.log("nextTrainTime: " + moment(nextTrainTime).format("hh:mm"));
   
+  return moment(nextTrainTime).format("hh:mm");
+
 }
 
 // Calculate how many minutes from now until the next train arrives, then appent it to each train row
@@ -103,6 +132,14 @@ trainData.on("child_added", function(childsnapshot) {
 
   // Call appendTrain() to write results to #schedule-section
   appendTrain(childsnapshot);
+  // Call function nextArrival(train) to calculate train's nextArrival
+  nextArrival(childsnapshot);
+
+  // Call function minutesAway() to calculate minutes until the next train arrives
+  //minutesAway();
+  
+  // need childsnapshot in other functions
+  return childsnapshot;
 
 }, function(errorObject) {
       console.log("The read failed: " + errorObject.code);
@@ -126,6 +163,7 @@ $("#add-train").on("click", function(event) {
       frequencyData: frequency,
       dateAdded: firebase.database.ServerValue.TIMESTAMP
       });
+
   });
 
   // --------------------------------------------------------------

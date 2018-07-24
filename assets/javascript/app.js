@@ -59,16 +59,20 @@ $(document).ready(function () {
         var tdFrequency = $("<td>");
         tdFrequency.text(train.val().frequencyData);
 
+        // Next Arrival
         var tdNextArrivalInfo = nextArrival(train);
         var tdNextArrivalInfoTime = tdNextArrivalInfo[0];
         var tdNextArrivalTime = $("<td>");
         tdNextArrivalTime.text(tdNextArrivalInfoTime);
-
+        
+        // Minutes Away
         var tdMinutesTillTrainInfo = nextArrival(train);
         var tdMinutesTillTrainInfoMinutes = tdMinutesTillTrainInfo[1];
+        console.log("&&&&&&------appendTrain1 - tdMinutesTillTrainInfoMinutes: " + tdMinutesTillTrainInfoMinutes);
         var tdMinutesTillTrain = $("<td>");
+        console.log("&&&&&&------appendTrain2 - tdMinutesTillTrain before text(): " + tdMinutesTillTrain); 
         tdMinutesTillTrain.text(tdMinutesTillTrainInfoMinutes);
-        console.log("&&&&&&------appendTrain - tdMinutesTillTrain: " + tdMinutesTillTrain); 
+        console.log("&&&&&&------appendTrain3 - tdMinutesTillTrain after text(): " + tdMinutesTillTrain); 
 
         tr.append(tdName).append(tdDestination).append(tdFrequency).append(tdNextArrivalTime).append(tdMinutesTillTrain);
 
@@ -122,7 +126,7 @@ $(document).ready(function () {
         return [moment(nextTrainTime).format("hh:mm"), moment(tMinutesTillTrain).format("hh:mm")];
 
     }
-
+    
     // BODY
     // --------------------------------------------------------------------------------
 

@@ -1,0 +1,9 @@
+* {
+    box-sizing: border-box
+}
+
+body {
+    background-color: #60bee4;
+    font-family: 'Angkor';font-size: 22px;
+    margin: 30px;
+ }
